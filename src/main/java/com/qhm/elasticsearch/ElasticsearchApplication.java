@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
 @SpringBootApplication
-@MapperScan("com.qhm.elasticsearch.mapper")
+@MapperScan(basePackages = {"com.qhm.elasticsearch.mapper","com.qhm.elasticsearch.datasources.mapper1","com.qhm.elasticsearch.datasources.mapper2"})
 public class ElasticsearchApplication {
 
     public static void main(String[] args) {

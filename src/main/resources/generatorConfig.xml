@@ -5,7 +5,7 @@
 
 <generatorConfiguration>
     <classPathEntry
-            location="C:\Users\dell\.m2\repository\mysql\mysql-connector-java\5.1.47\mysql-connector-java-5.1.47.jar"/>
+            location="/home/qihumao/repo/mysql/mysql-connector-java/5.1.47/mysql-connector-java-5.1.47.jar"/>
 
     <context id="machineTables" targetRuntime="MyBatis3" defaultModelType="flat">
         <commentGenerator>
@@ -14,30 +14,30 @@
         </commentGenerator>
 
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://172.16.9.88:4000/commander?useUnicode=true&amp;characterEncoding=utf-8&amp;noAccessToProcedureBodies=true&amp;useSSL=false&amp;serverTimezone=GMT%2B8"
-                        userId="zzsa"
-                        password="zz#123456">
+                        connectionURL="jdbc:mysql://127.0.0.1:3306/cslc?useUnicode=true&amp;characterEncoding=utf-8&amp;noAccessToProcedureBodies=true&amp;useSSL=false&amp;serverTimezone=GMT%2B8"
+                        userId="root"
+                        password="123456">
         </jdbcConnection>
 
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
 
-        <javaModelGenerator targetPackage="com.qhm.elasticsearch.entity" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="com.qhm.elasticsearch.datasources.entity" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
-        <sqlMapGenerator targetPackage="com.qhm.elasticsearch.mapper" targetProject="src/main/resources">
+        <sqlMapGenerator targetPackage="com.qhm.elasticsearch.datasources.mapper2" targetProject="src/main/resources">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
 
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.qhm.elasticsearch.mapper"
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.qhm.elasticsearch.datasources.mapper2"
                              targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
-        <table tableName="iot_highmode_run_data" domainObjectName="IotHihModeRunData">
+        <table tableName="user" domainObjectName="User">
             <property name="useActualColumnNames" value="false"/>
         </table>
 

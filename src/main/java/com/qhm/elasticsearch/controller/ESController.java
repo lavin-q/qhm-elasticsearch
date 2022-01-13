@@ -2,22 +2,32 @@ package com.qhm.elasticsearch.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.qhm.elasticsearch.entity.Book;
+import lombok.SneakyThrows;
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.RequestLine;
 import org.apache.http.entity.ContentType;
 import org.apache.http.nio.entity.NStringEntity;
 import org.apache.http.util.EntityUtils;
-import org.elasticsearch.client.Request;
-import org.elasticsearch.client.Response;
-import org.elasticsearch.client.ResponseListener;
-import org.elasticsearch.client.RestClient;
+import org.elasticsearch.action.DocWriteRequest;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.support.WriteRequest;
+import org.elasticsearch.client.*;
+import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.common.xcontent.XContentBuilder;
+import org.elasticsearch.common.xcontent.XContentFactory;
+import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.VersionType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @ Description:
@@ -31,6 +41,9 @@ public class ESController {
 
     @Resource
     private RestClient client;
+
+    @Resource
+    private RestHighLevelClient restHighLevelClient;
 
     @RequestMapping(value = "/go", method = RequestMethod.GET)
     public ResponseEntity<String> go() {
@@ -247,5 +260,91 @@ public class ESController {
         String responseBody = EntityUtils.toString(response.getEntity());
 
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
+    }
+
+    /**
+     * 官方文档Index添加测试
+     * @return
+     */
+    @RequestMapping(value = "/index",method = RequestMethod.POST)
+    public ResponseEntity<String> testIndex() throws Exception {
+        /**
+         * 参数为字符串形式
+         */
+        IndexRequest request = new IndexRequest("posts");
+        request.id("１");
+        String jsonString = "{" +
+                "\"user\":\"kimchy１\"," +
+                "\"postDate\":\"2013-01-30\"," +
+                "\"message\":\"trying out Elasticsearch\"" +
+                "}";
+        request.source(jsonString, XContentType.JSON);
+
+        request.routing("routing");
+        request.timeout(TimeValue.timeValueSeconds(1));
+        request.timeout("1s");
+        request.setRefreshPolicy(WriteRequest.RefreshPolicy.WAIT_UNTIL);
+        request.setRefreshPolicy("wait_for");
+//        request.version(2);
+//        request.versionType(VersionType.INTERNAL);
+        request.opType(DocWriteRequest.OpType.CREATE);
+//        request.opType("create");
+        //request.setPipeline("pipeline");
+//        try {
+//            IndexResponse indexResponse = restHighLevelClient.index(request, RequestOptions.DEFAULT);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+
+        /**
+         * 参数为map形式
+         */
+        Map<String, Object> jsonMap = new HashMap<>();
+        jsonMap.put("user", "kimchy２");
+        jsonMap.put("postDate", new Date());
+        jsonMap.put("message", "trying out Elasticsearch");
+        IndexRequest mapRequest = new IndexRequest("posts")
+                .id("２").source(jsonMap);
+        mapRequest.routing("routin_map");
+        mapRequest.timeout(TimeValue.timeValueSeconds(1));
+        mapRequest.timeout("1s");
+        mapRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.WAIT_UNTIL);
+        mapRequest.setRefreshPolicy("wait_for");
+        mapRequest.opType(DocWriteRequest.OpType.CREATE);
+//        mapRequest.setPipeline("pipeline");
+        try {
+            IndexResponse mapResponse = restHighLevelClient.index(mapRequest, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        /**
+         * 参数为JsonBuild形式
+         */
+        XContentBuilder builder = XContentFactory.jsonBuilder();
+        builder.startObject();
+        {
+            builder.field("user", "kimchy３");
+            builder.timeField("postDate", new Date());
+            builder.field("message", "trying out Elasticsearch");
+        }
+        builder.endObject();
+        IndexRequest builderIndexRequest = new IndexRequest("posts")
+                .id("３").source(builder);
+
+
+        /**
+         * 参数为source形式
+         */
+        IndexRequest sourceIndexRequest = new IndexRequest("posts")
+                .id("4")
+                .source("user", "kimchy4",
+                        "postDate", new Date(),
+                        "message", "trying out Elasticsearch");
+
+
+
+
+        return null;
     }
 }

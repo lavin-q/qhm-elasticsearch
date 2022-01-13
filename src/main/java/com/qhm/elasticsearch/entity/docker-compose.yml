@@ -1,0 +1,23 @@
+# yaml 配置
+#docker-compose 启动文件
+version: '3.1'
+services:
+  elasticsearch:
+    image: elasticsearch:7.8.0
+    restart: always
+    container_name: elasticsearch
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      - discovery.type=single-node
+      - http.port=9200
+      - 'ES_JAVA_POTS=-Xms128m -Xmx128m'
+    volumes:
+      - "/home/elasticsearch/config:/config"
+      - "/home/elasticsearch/data:/data"
+      - "/home/elasticsearch/logs:/logs"
+networks:
+  default:
+    external:
+      name: es

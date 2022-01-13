@@ -1,0 +1,41 @@
+#服务端口
+server:
+  port: 8081
+
+#es配置
+es:
+  url: 82.156.214.67
+  #es端口
+  port: 9200
+  #esͨ请求类型
+  scheme: http
+
+#server.servlet.context-path=/zhgd/opensite/
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.jdbc.Driver
+#    url: jdbc:mysql://127.0.0.1:31300/qhm?useUnicode=true&characterEncoding=utf-8&noAccessToProcedureBodies=true&useSSL=false&serverTimezone=GMT%2B8
+#    username: root
+#    password: 123456
+
+spring:
+  datasource:
+    database1:
+      url: jdbc:mysql://localhost:3306/cslc?useUnicode=true&characterEncoding=utf8
+      username: root
+      password: 123456
+      driverClassName: com.mysql.jdbc.Driver
+    database2:
+      url: jdbc:mysql://localhost:31306/cslc?useUnicode=true&characterEncoding=utf8
+      username: root
+      password: 123456
+      driverClassName: com.mysql.jdbc.Driver
+      type: com.alibaba.druid.pool.DruidDataSource
+  jpa:
+    database: mysql
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    database-platform: org.hibernate.dialect.MySQL5Dialect
